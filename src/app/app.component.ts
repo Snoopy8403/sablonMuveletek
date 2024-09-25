@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,8 +9,16 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   elemek = ['elso elem', 'masodik elem', 'harmadik elem'];
+
+  ngOnInit(): void {
+    fetch('https://kodbazis.hu/api/cimek')
+      .then((res) => res.json())
+      .then((cimek) => {
+        console.log('CImek:' + cimek);
+      });
+  }
 
   onSubmit(e: any) {
     e.preventDefault();
