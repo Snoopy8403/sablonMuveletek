@@ -1,23 +1,29 @@
 <h1>Elemek</h1>
-<p *ngIf="elemek.length > 0; else nincsElem">
+<ng-container *ngIf="folyamatbanVan; else lista">
+  <p>Betöltés folyamatban...</p>
+</ng-container>
+
+<ng-template #lista>
+  <p *ngIf="elemek.length > 0; else nincsElem"></p>
   Jelenleg {{ elemek.length }} elem létezik.
-</p>
-<div *ngFor="let elem of elemek; let i = index">
-  <p>{{ i + 1 }} - {{ elem }} <button (click)="elemTorlese(i)">X</button></p>
-  <hr />
-</div>
+  <div *ngFor="let elem of elemek; let i = index">
+    <p>{{ i + 1 }} - {{ elem }} <button (click)="elemTorlese(i)">X</button></p>
+    <hr />
+  </div>
 
-<div *ngIf="elemek.length < 5; else maxEleszamElerve">
-  <form (submit)="onSubmit($event)">
-    <input type="text" name="cim" />
-    <button type="submit">Hozzáadás</button>
-  </form>
-</div>
+  <div *ngIf="elemek.length < 5; else maxEleszamElerve">
+    <form (submit)="onSubmit($event)">
+      <input type="text" name="cim" />
+      <button type="submit">Hozzáadás</button>
+    </form>
+  </div>
 
-<ng-template #maxEleszamElerve>
-  <h3>Max elemszám elérve</h3>
-</ng-template>
+  <ng-template #maxEleszamElerve>
+    <h3>Max elemszám elérve</h3>
+  </ng-template>
 
-<ng-template #nincsElem>
-  <p>Adj hozzá elemeket!</p>
+  <ng-template #nincsElem>
+    <p>Adj hozzá elemeket!</p>
+  </ng-template>
+
 </ng-template>

@@ -10,24 +10,47 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  elemek = ['elso elem', 'masodik elem', 'harmadik elem'];
+  elemek: string[] = [];
+  folyamatbanVan: boolean = false;
 
   ngOnInit(): void {
+    this.elemekLekerdezese();
+  }
+
+  elemekLekerdezese() {
+    this.folyamatbanVan = true;
     fetch('https://kodbazis.hu/api/cimek')
       .then((res) => res.json())
-      .then((cimek) => {
-        console.log('CImek:' + cimek);
+      .then((tartalom) => {
+        this.elemek = tartalom;
+      })
+      .catch(() => {
+        alert('Hiba történt!');
+      })
+      .finally(() => {
+        this.folyamatbanVan = false;
       });
+  }
+
+  elemTorlese(i: number) {
+    fetch('https://kodbazis.hu/api/cimek' + i, { method: 'DELETE' }).then(
+      () => {
+        this.elemekLekerdezese();
+      }
+    );
   }
 
   onSubmit(e: any) {
     e.preventDefault();
     const ujErtek = e.target.elements.cim.value;
-    this.elemek.push(ujErtek);
+    fetch('https://kodbazis.hu/api/cimek', {
+      method: 'POST',
+      body: JSON.stringify({
+        cim: ujErtek,
+      }),
+    }).then(() => {
+      this.elemekLekerdezese();
+    });
     e.target.reset();
-  }
-
-  elemTorlese(id: number) {
-    this.elemek.splice(id, 1);
   }
 }
